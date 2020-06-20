@@ -1,0 +1,6 @@
+node_modules/
+public/
+src/main.ts
+src/App.vue
+yarn-error.log
+.idea
