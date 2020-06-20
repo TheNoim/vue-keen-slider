@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import KeenSliderLib, { TOptions, TEvents } from "keen-slider";
 
 const KeenSliderProps = Vue.extend({
@@ -75,6 +75,7 @@ type KeenEvents = Partial<
 >;
 
 @Component({
+	name: "Slider",
 	props: {
 		autoHeight: {
 			default: () => true,
@@ -151,6 +152,14 @@ export default class KeenSlider extends KeenSliderProps {
 				...this.sliderOptions,
 				...this.generateEventHooks()
 			} as TOptions);
+			this.$watch("$props", () => {
+				if (this.keenSlider) {
+					(this.keenSlider.refresh as (options?: TOptions) => void)({
+						...this.sliderOptions,
+						...this.generateEventHooks()
+					} as TOptions);
+				}
+			});
 		}
 		this.current = this.initial;
 	}
@@ -213,16 +222,6 @@ export default class KeenSlider extends KeenSliderProps {
 			}
 		}
 		return hookObject;
-	}
-
-	@Watch("$props")
-	private updateOptions() {
-		if (this.keenSlider) {
-			(this.keenSlider.refresh as (options?: TOptions) => void)({
-				...this.sliderOptions,
-				...this.generateEventHooks()
-			} as TOptions);
-		}
 	}
 
 	/**

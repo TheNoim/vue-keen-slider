@@ -11,24 +11,11 @@ export function install(Vue: any) {
 }
 
 const plugin = {
-	install
+	install,
+	KeenSlider,
+	KeenSlide
 };
 
-// Auto-install when vue is found (eg. in browser via <script> tag)
-let GlobalVue = null;
-if (typeof window !== "undefined") {
-	GlobalVue = window.Vue;
-} else {
-	// @ts-ignore
-	if (typeof global !== "undefined") {
-		// @ts-ignore
-		GlobalVue = global.Vue;
-	}
-}
-if (GlobalVue) {
-	GlobalVue.use(plugin);
-}
+export { KeenSlide, KeenSlider };
 
 export default plugin;
-
-export { KeenSlide, KeenSlider };
