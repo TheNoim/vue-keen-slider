@@ -28,3 +28,4 @@ This library also includes 3 additional props for more easy use:
 1. `navigation-arrows` (boolean): Enables navigation arrows like in the ["arrows and dots" example](https://keen-slider.io/examples/#navigation). 
 2. `navigation-dots` (boolean): Enables navigation dots like in the ["arrows and dots" example](https://keen-slider.io/examples/#navigation). 
 2. `arrow-color` (css color string): Changes the color of the navigation arrow. 
+4. `useParentScopeId` (boolean): Use the css scope of the parent component. Useful for styling.

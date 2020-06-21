@@ -2,17 +2,19 @@
 	<div
 		v-if="!navigationArrows && !navigationDots"
 		class="keen-slider"
+		v-bind="extraAttributes"
 		ref="sliderRef"
 	>
 		<slot></slot>
 	</div>
-	<div v-else class="navigation-wrapper">
-		<div class="keen-slider" ref="sliderRef">
+	<div v-else class="navigation-wrapper" v-bind="extraAttributes">
+		<div class="keen-slider" v-bind="extraAttributes" ref="sliderRef">
 			<slot></slot>
 		</div>
 		<svg
 			v-if="navigationArrows"
 			@click="prev"
+			v-bind="extraAttributes"
 			:class="{
 				arrow: true,
 				'arrow--left': true,
@@ -23,12 +25,14 @@
 			viewBox="0 0 24 24"
 		>
 			<path
+				v-bind="extraAttributes"
 				d="M16.67 0l2.83 2.829-9.339 9.175 9.339 9.167-2.83 2.829-12.17-11.996z"
 			></path>
 		</svg>
 		<svg
 			v-if="navigationArrows"
 			@click="next"
+			v-bind="extraAttributes"
 			:class="{
 				arrow: true,
 				'arrow--right': true,
@@ -40,10 +44,14 @@
 			xmlns="http://www.w3.org/2000/svg"
 			viewBox="0 0 24 24"
 		>
-			<path d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z"></path>
+			<path
+				v-bind="extraAttributes"
+				d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z"
+			></path>
 		</svg>
-		<div v-if="navigationDots" class="dots">
+		<div v-if="navigationDots" class="dots" v-bind="extraAttributes">
 			<button
+				v-bind="extraAttributes"
 				v-for="(_, idx) in dotHelper"
 				@click="moveToSlideRelative(idx)"
 				:class="{ dot: true, active: current === idx }"
@@ -76,6 +84,7 @@ const KeenSliderProps = Vue.extend({
 		navigationArrows: Boolean,
 		navigationDots: Boolean,
 		arrowColor: String,
+		useParentScopeId: Boolean,
 	},
 });
 
@@ -147,6 +156,10 @@ type KeenEvents = Partial<
 		arrowColor: {
 			type: String,
 		},
+		useParentScopeId: {
+			type: Boolean,
+			default: () => false,
+		},
 	},
 })
 export default class KeenSlider extends KeenSliderProps {
@@ -204,6 +217,20 @@ export default class KeenSlider extends KeenSliderProps {
 		return this.keenSlider
 			? [...Array(this.keenSlider.details().size).keys()]
 			: [];
+	}
+
+	private get extraAttributes() {
+		if (this.useParentScopeId && this.parentScopeId) {
+			return {
+				[this.parentScopeId]: true,
+			};
+		} else {
+			return {};
+		}
+	}
+
+	private get parentScopeId() {
+		return (this.$parent.$options as any)._scopeId;
 	}
 
 	private generateEventHooks() {

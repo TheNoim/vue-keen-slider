@@ -1,11 +1,19 @@
 <template>
 	<div id="app">
-		<keen-slider arrow-color="black" loop navigation-arrows navigation-dots>
-			<keen-slide>1</keen-slide>
-			<keen-slide>2</keen-slide>
-			<keen-slide>3</keen-slide>
-			<keen-slide>4</keen-slide>
-		</keen-slider>
+		<test>
+			<keen-slider
+				arrow-color="black"
+				loop
+				navigation-arrows
+				navigation-dots
+				use-parent-scope-id
+			>
+				<keen-slide>1</keen-slide>
+				<keen-slide>2</keen-slide>
+				<keen-slide>3</keen-slide>
+				<keen-slide>4</keen-slide>
+			</keen-slider>
+		</test>
 	</div>
 </template>
 
@@ -13,12 +21,14 @@
 import { Component, Vue } from "vue-property-decorator";
 import KeenSlider from "./components/KeenSlider.vue";
 import KeenSlide from "./components/KeenSlide.vue";
+import Test from "./components/TestComponent.vue";
 
 @Component({
 	components: {
 		KeenSlider,
-		KeenSlide
-	}
+		KeenSlide,
+		Test,
+	},
 })
 export default class App extends Vue {}
 </script>
