@@ -13,7 +13,11 @@
 		<svg
 			v-if="navigationArrows"
 			@click="prev"
-			:class="{arrow: true, 'arrow--left': true, 'arrow--disabled': current === 0}"
+			:class="{
+				arrow: true,
+				'arrow--left': true,
+				'arrow--disabled': current === 0,
+			}"
 			:style="[arrowColor && { fill: arrowColor }]"
 			xmlns="http://www.w3.org/2000/svg"
 			viewBox="0 0 24 24"
@@ -25,7 +29,13 @@
 		<svg
 			v-if="navigationArrows"
 			@click="next"
-			:class="{arrow: true, 'arrow--right': true, 'arrow--disabled': keenSlider ? current === keenSlider.details().size - 1 : false}"
+			:class="{
+				arrow: true,
+				'arrow--right': true,
+				'arrow--disabled': keenSlider
+					? current === keenSlider.details().size - 1
+					: false,
+			}"
 			:style="[arrowColor && { fill: arrowColor }]"
 			xmlns="http://www.w3.org/2000/svg"
 			viewBox="0 0 24 24"
@@ -36,7 +46,7 @@
 			<button
 				v-for="(_, idx) in dotHelper"
 				@click="moveToSlideRelative(idx)"
-				:class="{dot: true, active: current === idx}"
+				:class="{ dot: true, active: current === idx }"
 				:key="idx"
 			></button>
 		</div>
@@ -44,7 +54,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
+import Vue from "vue";
 import KeenSliderLib, { TOptions, TEvents } from "keen-slider";
 
 const KeenSliderProps = Vue.extend({
@@ -64,8 +75,8 @@ const KeenSliderProps = Vue.extend({
 		rubberband: Boolean,
 		navigationArrows: Boolean,
 		navigationDots: Boolean,
-		arrowColor: String
-	}
+		arrowColor: String,
+	},
 });
 
 type KeenEvents = Partial<
@@ -79,64 +90,64 @@ type KeenEvents = Partial<
 	props: {
 		autoHeight: {
 			default: () => true,
-			type: Boolean
+			type: Boolean,
 		},
 		controls: {
 			default: () => true,
-			type: Boolean
+			type: Boolean,
 		},
 		dragSpeed: {
 			default: () => 1,
-			type: Number
+			type: Number,
 		},
 		initial: {
 			default: () => 0,
-			type: Number
+			type: Number,
 		},
 		vertical: {
 			default: () => false,
-			type: Boolean
+			type: Boolean,
 		},
 		loop: {
 			default: () => false,
-			type: Boolean
+			type: Boolean,
 		},
 		mode: {
 			default: () => "snap",
-			type: String
+			type: String,
 		},
 		duration: {
 			default: () => 500,
-			type: Number
+			type: Number,
 		},
 		resetSlide: {
 			default: () => false,
-			type: Boolean
+			type: Boolean,
 		},
 		slidesPerView: {
 			default: () => 1,
-			type: Number
+			type: Number,
 		},
 		spacing: {
 			default: () => 0,
-			type: Number
+			type: Number,
 		},
 		rubberband: {
 			default: () => true,
-			type: Boolean
+			type: Boolean,
 		},
 		navigationArrows: {
 			default: () => false,
-			type: Boolean
+			type: Boolean,
 		},
 		navigationDots: {
 			default: () => false,
-			type: Boolean
+			type: Boolean,
 		},
 		arrowColor: {
-			type: String
-		}
-	}
+			type: String,
+		},
+	},
 })
 export default class KeenSlider extends KeenSliderProps {
 	$refs!: {
@@ -150,13 +161,13 @@ export default class KeenSlider extends KeenSliderProps {
 		if (typeof window !== "undefined") {
 			this.keenSlider = new KeenSliderLib(this.$refs.sliderRef, {
 				...this.sliderOptions,
-				...this.generateEventHooks()
+				...this.generateEventHooks(),
 			} as TOptions);
 			this.$watch("$props", () => {
 				if (this.keenSlider) {
 					(this.keenSlider.refresh as (options?: TOptions) => void)({
 						...this.sliderOptions,
-						...this.generateEventHooks()
+						...this.generateEventHooks(),
 					} as TOptions);
 				}
 			});
@@ -185,7 +196,7 @@ export default class KeenSlider extends KeenSliderProps {
 			resetSlide: this.resetSlide,
 			slidesPerView: this.slidesPerView,
 			spacing: this.spacing,
-			rubberband: this.rubberband
+			rubberband: this.rubberband,
 		};
 	}
 
@@ -204,7 +215,7 @@ export default class KeenSlider extends KeenSliderProps {
 			"slideChanged",
 			"dragEnd",
 			"dragStart",
-			"move"
+			"move",
 		];
 		const hookObject: KeenEvents = {};
 		for (const Key of events) {
