@@ -1,5 +1,5 @@
 import KeenSlider from "./components/KeenSlider.vue";
-import KeenSlide from "./components/KeenSlider.vue";
+import KeenSlide from "./components/KeenSlide.vue";
 
 export function install(Vue: any) {
 	// @ts-ignore
@@ -13,7 +13,7 @@ export function install(Vue: any) {
 const plugin = {
 	install,
 	KeenSlider,
-	KeenSlide
+	KeenSlide,
 };
 
 export { KeenSlide, KeenSlider };
