@@ -85,6 +85,7 @@ const KeenSliderProps = Vue.extend({
 		navigationDots: Boolean,
 		arrowColor: String,
 		useParentScopeId: Boolean,
+		centered: Boolean,
 	},
 });
 
@@ -160,6 +161,10 @@ type KeenEvents = Partial<
 			type: Boolean,
 			default: () => false,
 		},
+		centered: {
+			type: Boolean,
+			default: () => false,
+		},
 	},
 })
 export default class KeenSlider extends KeenSliderProps {
@@ -210,6 +215,7 @@ export default class KeenSlider extends KeenSliderProps {
 			slidesPerView: this.slidesPerView,
 			spacing: this.spacing,
 			rubberband: this.rubberband,
+			centered: this.centered,
 		};
 	}
 
