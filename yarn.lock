@@ -876,10 +876,10 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
-"@noim/keen-slider@^4.3.0":
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/@noim/keen-slider/-/keen-slider-4.3.0.tgz#766d4c3d19903491ca4756a6103a1383e940cf19"
-  integrity sha512-1M53zoOKRA08P2EU2jTWUiGuFY6asVp1Qdn5LfM/xqkHLknrX258CZVqekaD7or5BuBccpolljRnD6QUFWpaZw==
+"@noim/keen-slider@^4.3.1":
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@noim/keen-slider/-/keen-slider-4.3.1.tgz#7f0e67179227d49db615772fe4afbf62073ce915"
+  integrity sha512-60ceP68zptQB7Hi7W2XpX8EzzE7utsGiHCVbCQgFt8dti20QD8txkCVOX9GbuDS4IALM5fTfTUjGuEkltO3msw==
 
 "@soda/friendly-errors-webpack-plugin@^1.7.1":
   version "1.7.1"
