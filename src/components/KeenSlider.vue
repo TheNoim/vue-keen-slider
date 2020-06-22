@@ -64,7 +64,7 @@
 <script lang="ts">
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
-import KeenSliderLib, { TOptions, TEvents } from "keen-slider";
+import KeenSliderLib, { TOptions, TEvents } from "@noim/keen-slider";
 
 const KeenSliderProps = Vue.extend({
 	props: {
@@ -86,6 +86,7 @@ const KeenSliderProps = Vue.extend({
 		arrowColor: String,
 		useParentScopeId: Boolean,
 		centered: Boolean,
+		inlineBlockMode: Boolean,
 	},
 });
 
@@ -165,6 +166,10 @@ type KeenEvents = Partial<
 			type: Boolean,
 			default: () => false,
 		},
+		inlineBlockMode: {
+			type: Boolean,
+			default: () => false,
+		},
 	},
 })
 export default class KeenSlider extends KeenSliderProps {
@@ -216,6 +221,7 @@ export default class KeenSlider extends KeenSliderProps {
 			spacing: this.spacing,
 			rubberband: this.rubberband,
 			centered: this.centered,
+			inlineBlockMode: this.inlineBlockMode,
 		};
 	}
 
@@ -323,6 +329,9 @@ export default class KeenSlider extends KeenSliderProps {
 	}
 }
 </script>
+<style>
+@import "~@noim/keen-slider/keen-slider.min.css";
+</style>
 <style scoped>
 .navigation-wrapper {
 	position: relative;

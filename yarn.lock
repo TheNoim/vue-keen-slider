@@ -876,6 +876,11 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
+"@noim/keen-slider@^4.3.0":
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/@noim/keen-slider/-/keen-slider-4.3.0.tgz#766d4c3d19903491ca4756a6103a1383e940cf19"
+  integrity sha512-1M53zoOKRA08P2EU2jTWUiGuFY6asVp1Qdn5LfM/xqkHLknrX258CZVqekaD7or5BuBccpolljRnD6QUFWpaZw==
+
 "@soda/friendly-errors-webpack-plugin@^1.7.1":
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/@soda/friendly-errors-webpack-plugin/-/friendly-errors-webpack-plugin-1.7.1.tgz#706f64bcb4a8b9642b48ae3ace444c70334d615d"
@@ -4541,11 +4546,6 @@ jsprim@^1.2.2:
     extsprintf "1.3.0"
     json-schema "0.2.3"
     verror "1.10.0"
-
-keen-slider@^4.2.3:
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/keen-slider/-/keen-slider-4.2.3.tgz#1bfbb344eebd3c8cd50a071743c68f1e0469bca3"
-  integrity sha512-dVlzmp469JZRMcnKJ3sUS2mG4eE9Q6hxzsPvqVN9PC5Dja7801/wuUCBG8AKrjWtu4atpbV6dIb+Za4Ij/VkgA==
 
 killable@^1.0.1:
   version "1.0.1"
