@@ -85,6 +85,7 @@ const KeenSliderProps = Vue.extend({
 		arrowColor: String,
 		useParentScopeId: Boolean,
 		centered: Boolean,
+		autoplay: [Boolean, Number, String],
 	},
 });
 
@@ -160,6 +161,10 @@ type KeenEvents = Partial<
 			type: Boolean,
 			default: () => false,
 		},
+		autoplay: {
+			type: [Boolean, Number, String],
+			default: () => false,
+		},
 	},
 })
 export default class KeenSlider extends KeenSliderProps {
@@ -169,6 +174,7 @@ export default class KeenSlider extends KeenSliderProps {
 
 	private keenSlider: KeenSliderLib | null = null;
 	private current: number = 0;
+	private interval: number | null = null;
 
 	mounted() {
 		if (typeof window !== "undefined") {
@@ -176,12 +182,14 @@ export default class KeenSlider extends KeenSliderProps {
 				...this.sliderOptions,
 				...this.generateEventHooks(),
 			} as TOptions);
+			this.initAutoplay();
 			this.$watch("$props", () => {
 				if (this.keenSlider) {
 					(this.keenSlider.refresh as (options?: TOptions) => void)({
 						...this.sliderOptions,
 						...this.generateEventHooks(),
 					} as TOptions);
+					this.initAutoplay();
 				}
 			});
 		}
@@ -192,7 +200,30 @@ export default class KeenSlider extends KeenSliderProps {
 		if (this.keenSlider) {
 			this.keenSlider.destroy();
 		}
+		if (this.interval) {
+			clearInterval(this.interval);
+		}
 		this.$emit("destroy");
+	}
+
+	private initAutoplay() {
+		if (this.interval) {
+			clearInterval(this.interval);
+		}
+		if (this.autoplay) {
+			let time = 3000;
+			if (typeof this.autoplay === "number") {
+				time = this.autoplay;
+			} else if (typeof this.autoplay === "string") {
+				let parsedTime = parseInt(this.autoplay);
+				if (parsedTime > 0) {
+					time = parsedTime;
+				}
+			}
+			this.interval = setInterval(() => {
+				this.next();
+			}, time);
+		}
 	}
 
 	private get sliderOptions(): TOptions {

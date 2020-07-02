@@ -10,6 +10,7 @@
 				:auto-height="false"
 				:slides-per-view="3"
 				:spacing="50"
+				autoplay="1500"
 			>
 				<keen-slide>
 					<img
