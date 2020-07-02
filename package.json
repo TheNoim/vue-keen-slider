@@ -8,7 +8,7 @@
 		"build": "vue-cli-service build --target lib --name vue-keen-library src/index.ts"
 	},
 	"dependencies": {
-		"@noim/keen-slider": "^4.3.1",
+		"keen-slider": "^5.0.4",
 		"vue-class-component": "^7.2.3",
 		"vue-property-decorator": "^9.0.0"
 	},

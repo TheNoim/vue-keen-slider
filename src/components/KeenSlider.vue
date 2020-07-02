@@ -64,11 +64,10 @@
 <script lang="ts">
 import { Component } from "vue-property-decorator";
 import Vue from "vue";
-import KeenSliderLib, { TOptions, TEvents } from "@noim/keen-slider";
+import KeenSliderLib, { TOptions, TEvents } from "keen-slider";
 
 const KeenSliderProps = Vue.extend({
 	props: {
-		autoHeight: Boolean,
 		breakpoints: Object,
 		controls: Boolean,
 		dragSpeed: Number,
@@ -86,7 +85,6 @@ const KeenSliderProps = Vue.extend({
 		arrowColor: String,
 		useParentScopeId: Boolean,
 		centered: Boolean,
-		inlineBlockMode: Boolean,
 	},
 });
 
@@ -99,10 +97,6 @@ type KeenEvents = Partial<
 @Component({
 	name: "Slider",
 	props: {
-		autoHeight: {
-			default: () => true,
-			type: Boolean,
-		},
 		controls: {
 			default: () => true,
 			type: Boolean,
@@ -166,10 +160,6 @@ type KeenEvents = Partial<
 			type: Boolean,
 			default: () => false,
 		},
-		inlineBlockMode: {
-			type: Boolean,
-			default: () => false,
-		},
 	},
 })
 export default class KeenSlider extends KeenSliderProps {
@@ -207,7 +197,6 @@ export default class KeenSlider extends KeenSliderProps {
 
 	private get sliderOptions(): TOptions {
 		return {
-			autoHeight: this.autoHeight,
 			breakpoints: this.breakpoints,
 			controls: this.controls,
 			dragSpeed: this.dragSpeed,
@@ -221,7 +210,6 @@ export default class KeenSlider extends KeenSliderProps {
 			spacing: this.spacing,
 			rubberband: this.rubberband,
 			centered: this.centered,
-			inlineBlockMode: this.inlineBlockMode,
 		};
 	}
 
@@ -330,7 +318,7 @@ export default class KeenSlider extends KeenSliderProps {
 }
 </script>
 <style>
-@import "~@noim/keen-slider/keen-slider.min.css";
+@import "~keen-slider/keen-slider.min.css";
 </style>
 <style scoped>
 .navigation-wrapper {

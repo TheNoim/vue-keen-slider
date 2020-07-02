@@ -9,7 +9,6 @@
 				use-parent-scope-id
 				:auto-height="false"
 				:slides-per-view="3"
-				inline-block-mode
 				:spacing="50"
 			>
 				<keen-slide>
