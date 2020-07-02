@@ -1,6 +1,6 @@
 {
 	"name": "vue-keen-slider",
-	"version": "0.4.2",
+	"version": "1.0.0",
 	"private": false,
 	"main": "dist/vue-keen-library.umd.min.js",
 	"scripts": {
