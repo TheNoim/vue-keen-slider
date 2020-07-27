@@ -286,6 +286,12 @@ export default class KeenSlider extends KeenSliderProps {
 				};
 			} else {
 				hookObject[Key] = (...args) => {
+					if (Key === "dragStart" && this.interval) {
+						clearInterval(this.interval);
+					}
+					if (Key === "dragEnd") {
+						this.initAutoplay();
+					}
 					this.$emit(Key, ...args);
 				};
 			}

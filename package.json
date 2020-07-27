@@ -8,17 +8,17 @@
 		"build": "vue-cli-service build --target lib --name vue-keen-library src/index.ts"
 	},
 	"dependencies": {
-		"keen-slider": "^5.0.4",
-		"vue-class-component": "^7.2.3",
+		"keen-slider": "^5.2.2",
+		"vue-class-component": "^7.2.5",
 		"vue-property-decorator": "^9.0.0"
 	},
 	"devDependencies": {
-		"@vue/cli-plugin-babel": "~4.4.0",
-		"@vue/cli-plugin-typescript": "~4.4.0",
-		"@vue/cli-service": "~4.4.0",
+		"@vue/cli-plugin-babel": "~4.4.6",
+		"@vue/cli-plugin-typescript": "~4.4.6",
+		"@vue/cli-service": "~4.4.6",
 		"core-js": "^3.6.5",
 		"prettier": "^2.0.5",
-		"typescript": "~3.9.3",
+		"typescript": "~3.9.7",
 		"vue": "^2.6.11",
 		"vue-template-compiler": "^2.6.11"
 	},
