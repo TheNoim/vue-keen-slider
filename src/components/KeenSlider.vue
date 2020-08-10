@@ -178,22 +178,29 @@ export default class KeenSlider extends KeenSliderProps {
 
 	mounted() {
 		if (typeof window !== "undefined") {
-			this.keenSlider = new KeenSliderLib(this.$refs.sliderRef, {
-				...this.sliderOptions,
-				...this.generateEventHooks(),
-			} as TOptions);
-			this.initAutoplay();
-			this.$watch("$props", () => {
-				if (this.keenSlider) {
-					(this.keenSlider.refresh as (options?: TOptions) => void)({
-						...this.sliderOptions,
-						...this.generateEventHooks(),
-					} as TOptions);
-					this.initAutoplay();
-				}
+			this.$nextTick(() => {
+				this.initialize();
 			});
 		}
 		this.current = this.initial;
+	}
+
+	private initialize() {
+		this.keenSlider = new KeenSliderLib(
+			this.$refs.sliderRef,
+			this.getCombinedOptions()
+		);
+		this.initAutoplay();
+		this.$watch("$props", () => {
+			this.refresh();
+		});
+	}
+
+	refresh() {
+		if (this.keenSlider) {
+			this.keenSlider.refresh(this.getCombinedOptions());
+			this.initAutoplay();
+		}
 	}
 
 	beforeDestroy() {
@@ -224,6 +231,13 @@ export default class KeenSlider extends KeenSliderProps {
 				this.next();
 			}, time);
 		}
+	}
+
+	private getCombinedOptions(): TOptions {
+		return {
+			...this.sliderOptions,
+			...this.generateEventHooks(),
+		};
 	}
 
 	private get sliderOptions(): TOptions {
