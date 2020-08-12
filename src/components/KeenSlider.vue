@@ -9,6 +9,7 @@
 	</div>
 	<div v-else class="navigation-wrapper" v-bind="extraAttributes">
 		<div class="keen-slider" v-bind="extraAttributes" ref="sliderRef">
+			<!-- @slot Contains the slides -->
 			<slot></slot>
 		</div>
 		<svg
@@ -98,69 +99,137 @@ type KeenEvents = Partial<
 @Component({
 	name: "Slider",
 	props: {
+		/**
+		 * Control slider with mouse or touch gestures
+		 * @default true
+		 */
 		controls: {
 			default: () => true,
 			type: Boolean,
 		},
+		/**
+		 * Adjust the speed that is translated to the slider when dragging - minus values would invert the swipe direction
+		 * @default 1
+		 */
 		dragSpeed: {
 			default: () => 1,
 			type: Number,
 		},
+		/**
+		 * Index of the initial activated slide
+		 * @default 0
+		 */
 		initial: {
 			default: () => 0,
 			type: Number,
 		},
+		/**
+		 * Set the slider direction to vertical
+		 * @default false
+		 */
 		vertical: {
 			default: () => false,
 			type: Boolean,
 		},
+		/**
+		 * Infinite loop of slides
+		 * @default false
+		 */
 		loop: {
 			default: () => false,
 			type: Boolean,
 		},
+		/**
+		 * Set the mode of movement of the slider
+		 * @default snap
+		 * @values snap, free-snap, free
+		 */
 		mode: {
 			default: () => "snap",
 			type: String,
 		},
+		/**
+		 * Set the animation duration for the "snap"-mode
+		 * @default 500
+		 */
 		duration: {
 			default: () => 500,
 			type: Number,
 		},
+		/**
+		 * Reset to initial when the breakpoint changes
+		 * @default false
+		 */
 		resetSlide: {
 			default: () => false,
 			type: Boolean,
 		},
+		/**
+		 * Number of slides per view
+		 * @default 1
+		 */
 		slidesPerView: {
 			default: () => 1,
 			type: Number,
 		},
+		/**
+		 * Spacing between slides in pixel
+		 * @default 0
+		 */
 		spacing: {
 			default: () => 0,
 			type: Number,
 		},
+		/**
+		 * Simulate rubberband if moving or dragging above the slider edge
+		 * @default true
+		 */
 		rubberband: {
 			default: () => true,
 			type: Boolean,
 		},
+		/**
+		 * Control the slider with arrows
+		 * @default false
+		 */
 		navigationArrows: {
 			default: () => false,
 			type: Boolean,
 		},
+		/**
+		 * Control the slider with dots
+		 * @default false
+		 */
 		navigationDots: {
 			default: () => false,
 			type: Boolean,
 		},
+		/**
+		 * Change the color of the navigation arrows
+		 */
 		arrowColor: {
 			type: String,
 		},
+		/**
+		 * Applies the parent css scope id to the slider
+		 * @default false
+		 */
 		useParentScopeId: {
 			type: Boolean,
 			default: () => false,
 		},
+		/**
+		 * Active slide will be centered - only makes sense, when slidesPerView is greater than `1`
+		 * @default false
+		 */
 		centered: {
 			type: Boolean,
 			default: () => false,
 		},
+		/**
+		 * Auto change the slide. Set the interval with this attribute as string or number in ms. Default interval: `3000`
+		 * @default false
+		 */
 		autoplay: {
 			type: [Boolean, Number, String],
 			default: () => false,
@@ -196,7 +265,11 @@ export default class KeenSlider extends KeenSliderProps {
 		});
 	}
 
-	refresh() {
+	/**
+	 * Refresh keen slider configuration
+	 * @public
+	 */
+	public refresh() {
 		if (this.keenSlider) {
 			this.keenSlider.refresh(this.getCombinedOptions());
 			this.initAutoplay();
@@ -315,8 +388,10 @@ export default class KeenSlider extends KeenSliderProps {
 
 	/**
 	 * Safe call to keen-slider moveToSlide() method
-	 * @param slide
-	 * @param duration
+	 * @param {number} slide
+	 * @param {number} duration
+	 * @see https://keen-slider.io/api/#methods
+	 * @public
 	 */
 	public moveToSlide(slide: number, duration?: number) {
 		if (this.keenSlider) {
@@ -326,9 +401,11 @@ export default class KeenSlider extends KeenSliderProps {
 
 	/**
 	 * Safe call to keen-slider moveToSlideRelative() method
-	 * @param slide
-	 * @param nearest
-	 * @param duration
+	 * @param {number} slide
+	 * @param {boolean} nearest
+	 * @param {number} duration
+	 * @see https://keen-slider.io/api/#methods
+	 * @public
 	 */
 	public moveToSlideRelative(
 		slide: number,
@@ -342,6 +419,8 @@ export default class KeenSlider extends KeenSliderProps {
 
 	/**
 	 * Safe call to keen-slider next() method
+	 * @see https://keen-slider.io/api/#methods
+	 * @public
 	 */
 	public next() {
 		if (this.keenSlider) {
@@ -351,6 +430,8 @@ export default class KeenSlider extends KeenSliderProps {
 
 	/**
 	 * Safe call to keen-slider prev() method
+	 * @see https://keen-slider.io/api/#methods
+	 * @public
 	 */
 	public prev() {
 		if (this.keenSlider) {
@@ -360,6 +441,8 @@ export default class KeenSlider extends KeenSliderProps {
 
 	/**
 	 * Safe call to keen-slider resize() method
+	 * @see https://keen-slider.io/api/#methods
+	 * @public
 	 */
 	public resize() {
 		if (this.keenSlider) {

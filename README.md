@@ -30,3 +30,5 @@ This library also includes 5 additional props for more easy use:
 2. `arrow-color` (css color string): Changes the color of the navigation arrow. 
 4. `useParentScopeId` (boolean): Use the css scope of the parent component. Useful for styling.
 5. `autoplay` (boolean, string, number): Autoplay the slider. If you only pass true, the default value will be 3000ms. Autoplay is disabled by default. You need to pass the time in ms.
+
+Further documentation: [Component Docs](https://github.com/TheNoim/vue-keen-slider/tree/master/docs/KeenSlider.md)

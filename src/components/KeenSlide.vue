@@ -7,12 +7,17 @@
 		v-on="listeners"
 		class="keen-slider__slide"
 	>
+		<!-- @slot Slide content -->
 		<slot />
 	</div>
 </template>
 
 <script>
+/**
+ * Wrapper component for every slide
+ * @displayName Slide
+ */
 export default {
-	name: 'Slide'
-}
+	name: "Slide",
+};
 </script>
