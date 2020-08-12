@@ -5,3 +5,11 @@ src/App.vue
 yarn-error.log
 .idea
 docs/
+docgen.config.js
+babel.config.js
+vue.config.js
+src/index.ts
+src/shims-tsx.d.ts
+src/shims-vue.d.ts
+dist/demo.html
+src/components/TestComponent.vue
