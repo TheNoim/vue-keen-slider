@@ -13,3 +13,4 @@ src/shims-tsx.d.ts
 src/shims-vue.d.ts
 dist/demo.html
 src/components/TestComponent.vue
+rollup.config.js
