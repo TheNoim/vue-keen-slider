@@ -2,14 +2,17 @@
 	"name": "vue-keen-slider",
 	"version": "1.1.4",
 	"private": false,
-	"main": "dist/vue-keen-library.umd.min.js",
+	"main": "dist/vue-keen-library.ssr.js",
+	"module": "dist/vue-keen-library.esm.js",
+	"browser": "dist/vue-keen-library.js",
+	"unpkg": "dist/vue-keen-library.js",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/TheNoim/vue-keen-slider.git"
 	},
 	"scripts": {
 		"serve": "vue-cli-service serve",
-		"build": "vue-cli-service build --target lib --name vue-keen-library src/index.ts",
+		"build": "rollup -c",
 		"docs": "vue-docgen -c ./docgen.config.js"
 	},
 	"dependencies": {
@@ -18,11 +21,17 @@
 		"vue-property-decorator": "^9.0.0"
 	},
 	"devDependencies": {
+		"@rollup/plugin-buble": "^0.21.3",
 		"@vue/cli-plugin-babel": "~4.5.2",
 		"@vue/cli-plugin-typescript": "~4.5.2",
 		"@vue/cli-service": "~4.5.2",
 		"core-js": "^3.6.5",
+		"postcss-easy-import": "^3.0.0",
 		"prettier": "^2.0.5",
+		"rollup": "^2.25.0",
+		"rollup-plugin-postcss": "^3.1.5",
+		"rollup-plugin-typescript": "^1.0.1",
+		"rollup-plugin-vue": "^6.0.0-beta.10",
 		"typescript": "~3.9.7",
 		"vue": "^2.6.11",
 		"vue-docgen-cli": "^4.30.0",

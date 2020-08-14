@@ -452,7 +452,7 @@ export default class KeenSlider extends KeenSliderProps {
 }
 </script>
 <style>
-@import "~keen-slider/keen-slider.min.css";
+@import "../../node_modules/keen-slider/keen-slider.min.css";
 </style>
 <style scoped>
 .navigation-wrapper {
