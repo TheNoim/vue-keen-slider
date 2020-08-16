@@ -3,7 +3,7 @@ import KeenSlide from "./components/KeenSlide.vue";
 import KeenSlider from "./components/KeenSlider.vue";
 
 // Declare install function executed by Vue.use()
-export function install(Vue) {
+function install(Vue) {
 	if (install.installed) return;
 	install.installed = true;
 	Vue.component("KeenSlide", KeenSlide);
@@ -27,4 +27,4 @@ if (GlobalVue) {
 }
 
 // To allow use as module (npm/webpack/etc.) export component
-export default { KeenSlider, KeenSlide };
+export { KeenSlider, KeenSlide, install };

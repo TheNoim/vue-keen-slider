@@ -15,6 +15,12 @@ A vue wrapper for the [keen slider library](https://github.com/rcbyr/keen-slider
 </template>
 ```
 
+*Note*: You need to import the css file:
+
+```javascript
+import 'vue-keen-slider/dist/vue-keen-library.css'
+```
+
 All options of the keen slider library are accessible as vue prop. 
 
 This library also includes 5 additional props for more easy use:
