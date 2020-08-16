@@ -26,7 +26,7 @@ export default [
 				target: "ES2019",
 			}),
 			vue({
-				css: true, // Dynamically inject css as a <style> tag
+				css: false, // Dynamically inject css as a <style> tag
 				compileTemplate: true, // Explicitly convert template to render function
 			}),
 			postcss({
@@ -54,7 +54,7 @@ export default [
 				target: "ES2019",
 			}),
 			vue({
-				css: true, // Dynamically inject css as a <style> tag
+				css: false, // Dynamically inject css as a <style> tag
 				compileTemplate: true, // Explicitly convert template to render function
 				template: { optimizeSSR: true },
 			}),
