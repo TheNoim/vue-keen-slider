@@ -31,7 +31,6 @@ export default [
 			}),
 			postcss({
 				plugins: [atImport()],
-				modules: true,
 			}),
 			terser(),
 		],
@@ -60,7 +59,6 @@ export default [
 			}),
 			postcss({
 				plugins: [atImport()],
-				modules: true,
 			}),
 			terser(),
 		],
@@ -90,7 +88,6 @@ export default [
 			}),
 			postcss({
 				plugins: [atImport()],
-				modules: true,
 				extract: true,
 				minimize: true,
 			}),
