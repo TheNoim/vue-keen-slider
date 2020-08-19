@@ -18,6 +18,6 @@
  * @displayName Slide
  */
 export default {
-	name: "Slide",
+	name: "KeenSlide",
 };
 </script>

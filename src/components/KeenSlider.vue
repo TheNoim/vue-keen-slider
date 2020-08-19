@@ -63,41 +63,23 @@
 </template>
 
 <script lang="ts">
-import { Component } from "vue-property-decorator";
 import Vue from "vue";
 import KeenSliderLib, { TOptions, TEvents } from "keen-slider";
 
-const KeenSliderProps = Vue.extend({
-	props: {
-		breakpoints: Object,
-		controls: Boolean,
-		dragSpeed: Number,
-		initial: Number,
-		vertical: Boolean,
-		loop: Boolean,
-		mode: String,
-		duration: Number,
-		resetSlide: Boolean,
-		slidesPerView: Number,
-		spacing: Number,
-		rubberband: Boolean,
-		navigationArrows: Boolean,
-		navigationDots: Boolean,
-		arrowColor: String,
-		useParentScopeId: Boolean,
-		centered: Boolean,
-		autoplay: [Boolean, Number, String],
-	},
-});
-
 type KeenEvents = Partial<
 	{
-		[key in keyof TEvents]: (instance: KeenSlider) => void;
+		[key in keyof TEvents]: (instance: KeenSliderLib) => void;
 	}
 >;
 
-@Component({
-	name: "Slider",
+interface KeenSliderData {
+	keenSlider: KeenSliderLib | null;
+	current: number;
+	interval: number | null;
+}
+
+export default Vue.extend({
+	name: "KeenSlider",
 	props: {
 		/**
 		 * Control slider with mouse or touch gestures
@@ -234,17 +216,20 @@ type KeenEvents = Partial<
 			type: [Boolean, Number, String],
 			default: () => false,
 		},
+		/**
+		 * Change the options or event hooks for a given breakpoint. The breakpoint is set by the media query syntax. Note: The last options of the last matching breakpoint will be merged with the options on the root level.
+		 * @default {}
+		 */
+		breakpoints: {
+			type: Object,
+			default: () => {},
+		},
 	},
-})
-export default class KeenSlider extends KeenSliderProps {
-	$refs!: {
-		sliderRef: HTMLElement;
-	};
-
-	private keenSlider: KeenSliderLib | null = null;
-	private current: number = 0;
-	private interval: number | null = null;
-
+	data: (): KeenSliderData => ({
+		keenSlider: null,
+		current: 0,
+		interval: null,
+	}),
 	mounted() {
 		if (typeof window !== "undefined") {
 			this.$nextTick(() => {
@@ -252,30 +237,7 @@ export default class KeenSlider extends KeenSliderProps {
 			});
 		}
 		this.current = this.initial;
-	}
-
-	private initialize() {
-		this.keenSlider = new KeenSliderLib(
-			this.$refs.sliderRef,
-			this.getCombinedOptions()
-		);
-		this.initAutoplay();
-		this.$watch("$props", () => {
-			this.refresh();
-		});
-	}
-
-	/**
-	 * Refresh keen slider configuration
-	 * @public
-	 */
-	public refresh() {
-		if (this.keenSlider) {
-			this.keenSlider.refresh(this.getCombinedOptions());
-			this.initAutoplay();
-		}
-	}
-
+	},
 	beforeDestroy() {
 		if (this.keenSlider) {
 			this.keenSlider.destroy();
@@ -284,172 +246,181 @@ export default class KeenSlider extends KeenSliderProps {
 			clearInterval(this.interval);
 		}
 		this.$emit("destroy");
-	}
-
-	private initAutoplay() {
-		if (this.interval) {
-			clearInterval(this.interval);
-		}
-		if (this.autoplay) {
-			let time = 3000;
-			if (typeof this.autoplay === "number") {
-				time = this.autoplay;
-			} else if (typeof this.autoplay === "string") {
-				let parsedTime = parseInt(this.autoplay);
-				if (parsedTime > 0) {
-					time = parsedTime;
+	},
+	methods: {
+		initialize() {
+			this.keenSlider = new KeenSliderLib(
+				this.$refs.sliderRef as HTMLElement,
+				this.getCombinedOptions()
+			);
+			this.initAutoplay();
+			this.$watch("$props", () => {
+				this.refresh();
+			});
+		},
+		refresh() {
+			if (this.keenSlider) {
+				this.keenSlider.refresh(this.getCombinedOptions());
+				this.initAutoplay();
+			}
+		},
+		initAutoplay() {
+			if (this.interval) {
+				clearInterval(this.interval);
+			}
+			if (this.autoplay) {
+				let time = 3000;
+				if (typeof this.autoplay === "number") {
+					time = this.autoplay;
+				} else if (typeof this.autoplay === "string") {
+					let parsedTime = parseInt(this.autoplay);
+					if (parsedTime > 0) {
+						time = parsedTime;
+					}
+				}
+				this.interval = setInterval(() => {
+					this.next();
+				}, time);
+			}
+		},
+		getCombinedOptions(): TOptions {
+			return {
+				...this.sliderOptions,
+				...this.generateEventHooks(),
+			};
+		},
+		generateEventHooks() {
+			const events: (keyof TEvents)[] = [
+				"afterChange",
+				"beforeChange",
+				"mounted",
+				"created",
+				"slideChanged",
+				"dragEnd",
+				"dragStart",
+				"move",
+			];
+			const hookObject: KeenEvents = {};
+			for (const Key of events) {
+				if (Key === "slideChanged") {
+					hookObject[Key] = (...args) => {
+						if (this.keenSlider) {
+							this.current = this.keenSlider.details().relativeSlide;
+						}
+						this.$emit(Key, ...args);
+					};
+				} else {
+					hookObject[Key] = (...args) => {
+						if (Key === "dragStart" && this.interval) {
+							clearInterval(this.interval);
+						}
+						if (Key === "dragEnd") {
+							this.initAutoplay();
+						}
+						this.$emit(Key, ...args);
+					};
 				}
 			}
-			this.interval = setInterval(() => {
-				this.next();
-			}, time);
-		}
-	}
-
-	private getCombinedOptions(): TOptions {
-		return {
-			...this.sliderOptions,
-			...this.generateEventHooks(),
-		};
-	}
-
-	private get sliderOptions(): TOptions {
-		return {
-			breakpoints: this.breakpoints,
-			controls: this.controls,
-			dragSpeed: this.dragSpeed,
-			initial: this.initial,
-			vertical: this.vertical,
-			loop: this.loop,
-			mode: this.mode as "snap" | "free-snap" | "free",
-			duration: this.duration,
-			resetSlide: this.resetSlide,
-			slidesPerView: this.slidesPerView,
-			spacing: this.spacing,
-			rubberband: this.rubberband,
-			centered: this.centered,
-		};
-	}
-
-	private get dotHelper() {
-		return this.keenSlider
-			? [...Array(this.keenSlider.details().size).keys()]
-			: [];
-	}
-
-	private get extraAttributes() {
-		if (this.useParentScopeId && this.parentScopeId) {
+			return hookObject;
+		},
+		/**
+		 * Safe call to keen-slider moveToSlide() method
+		 * @param {number} slide
+		 * @param {number} duration
+		 * @see https://keen-slider.io/api/#methods
+		 * @public
+		 */
+		moveToSlide(slide: number, duration?: number) {
+			if (this.keenSlider) {
+				this.keenSlider.moveToSlide(slide, duration);
+			}
+		},
+		/**
+		 * Safe call to keen-slider moveToSlideRelative() method
+		 * @param {number} slide
+		 * @param {boolean} nearest
+		 * @param {number} duration
+		 * @see https://keen-slider.io/api/#methods
+		 * @public
+		 */
+		moveToSlideRelative(
+			slide: number,
+			nearest?: boolean,
+			duration?: number
+		) {
+			if (this.keenSlider) {
+				this.keenSlider.moveToSlideRelative(slide, nearest, duration);
+			}
+		},
+		/**
+		 * Safe call to keen-slider next() method
+		 * @see https://keen-slider.io/api/#methods
+		 * @public
+		 */
+		next() {
+			if (this.keenSlider) {
+				this.keenSlider.next();
+			}
+		},
+		/**
+		 * Safe call to keen-slider prev() method
+		 * @see https://keen-slider.io/api/#methods
+		 * @public
+		 */
+		prev() {
+			if (this.keenSlider) {
+				this.keenSlider.prev();
+			}
+		},
+		/**
+		 * Safe call to keen-slider resize() method
+		 * @see https://keen-slider.io/api/#methods
+		 * @public
+		 */
+		resize() {
+			if (this.keenSlider) {
+				this.keenSlider.resize();
+			}
+		},
+	},
+	computed: {
+		sliderOptions(): TOptions {
 			return {
-				[this.parentScopeId]: true,
+				breakpoints: this.breakpoints,
+				controls: this.controls,
+				dragSpeed: this.dragSpeed,
+				initial: this.initial,
+				vertical: this.vertical,
+				loop: this.loop,
+				mode: this.mode as "snap" | "free-snap" | "free",
+				duration: this.duration,
+				resetSlide: this.resetSlide,
+				slidesPerView: this.slidesPerView,
+				spacing: this.spacing,
+				rubberband: this.rubberband,
+				centered: this.centered,
 			};
-		} else {
-			return {};
-		}
-	}
-
-	private get parentScopeId() {
-		return (this.$parent.$options as any)._scopeId;
-	}
-
-	private generateEventHooks() {
-		const events: (keyof TEvents)[] = [
-			"afterChange",
-			"beforeChange",
-			"mounted",
-			"created",
-			"slideChanged",
-			"dragEnd",
-			"dragStart",
-			"move",
-		];
-		const hookObject: KeenEvents = {};
-		for (const Key of events) {
-			if (Key === "slideChanged") {
-				hookObject[Key] = (...args) => {
-					if (this.keenSlider) {
-						this.current = this.keenSlider.details().relativeSlide;
-					}
-					this.$emit(Key, ...args);
+		},
+		dotHelper() {
+			return this.keenSlider
+				? [...Array(this.keenSlider.details().size).keys()]
+				: [];
+		},
+		extraAttributes() {
+			if (this.useParentScopeId && this.parentScopeId) {
+				let parentScope = this.parentScopeId as string;
+				return {
+					[parentScope]: true,
 				};
 			} else {
-				hookObject[Key] = (...args) => {
-					if (Key === "dragStart" && this.interval) {
-						clearInterval(this.interval);
-					}
-					if (Key === "dragEnd") {
-						this.initAutoplay();
-					}
-					this.$emit(Key, ...args);
-				};
+				return {};
 			}
-		}
-		return hookObject;
-	}
-
-	/**
-	 * Safe call to keen-slider moveToSlide() method
-	 * @param {number} slide
-	 * @param {number} duration
-	 * @see https://keen-slider.io/api/#methods
-	 * @public
-	 */
-	public moveToSlide(slide: number, duration?: number) {
-		if (this.keenSlider) {
-			this.keenSlider.moveToSlide(slide, duration);
-		}
-	}
-
-	/**
-	 * Safe call to keen-slider moveToSlideRelative() method
-	 * @param {number} slide
-	 * @param {boolean} nearest
-	 * @param {number} duration
-	 * @see https://keen-slider.io/api/#methods
-	 * @public
-	 */
-	public moveToSlideRelative(
-		slide: number,
-		nearest?: boolean,
-		duration?: number
-	) {
-		if (this.keenSlider) {
-			this.keenSlider.moveToSlideRelative(slide, nearest, duration);
-		}
-	}
-
-	/**
-	 * Safe call to keen-slider next() method
-	 * @see https://keen-slider.io/api/#methods
-	 * @public
-	 */
-	public next() {
-		if (this.keenSlider) {
-			this.keenSlider.next();
-		}
-	}
-
-	/**
-	 * Safe call to keen-slider prev() method
-	 * @see https://keen-slider.io/api/#methods
-	 * @public
-	 */
-	public prev() {
-		if (this.keenSlider) {
-			this.keenSlider.prev();
-		}
-	}
-
-	/**
-	 * Safe call to keen-slider resize() method
-	 * @see https://keen-slider.io/api/#methods
-	 * @public
-	 */
-	public resize() {
-		if (this.keenSlider) {
-			this.keenSlider.resize();
-		}
-	}
-}
+		},
+		parentScopeId(): string {
+			return (this.$parent.$options as any)._scopeId;
+		},
+	},
+});
 </script>
 <style>
 @import "../../node_modules/keen-slider/keen-slider.min.css";

@@ -38,19 +38,18 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
 import KeenSlider from "./components/KeenSlider.vue";
 import KeenSlide from "./components/KeenSlide.vue";
 import Test from "./components/TestComponent.vue";
+import Vue from "vue";
 
-@Component({
+export default Vue.extend({
 	components: {
 		KeenSlider,
 		KeenSlide,
 		Test,
 	},
-})
-export default class App extends Vue {}
+});
 </script>
 
 <style>

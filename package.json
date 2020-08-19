@@ -15,9 +15,7 @@
 		"docs": "vue-docgen -c ./docgen.config.js"
 	},
 	"dependencies": {
-		"keen-slider": "^5.2.2",
-		"vue-class-component": "^7.2.5",
-		"vue-property-decorator": "^9.0.0"
+		"keen-slider": "^5.2.2"
 	},
 	"devDependencies": {
 		"@rollup/plugin-buble": "^0.21.3",

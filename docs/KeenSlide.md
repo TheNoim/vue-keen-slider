@@ -11,7 +11,3 @@
 | default | Slide content |          |
 
 ---
-
-```vue live
-<Slide>Default Example Usage</Slide>
-```
