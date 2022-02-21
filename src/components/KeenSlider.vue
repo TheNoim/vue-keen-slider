@@ -13,13 +13,13 @@
 			<slot></slot>
 		</div>
 		<svg
-			v-if="navigationArrows"
+			v-if="navigationArrows && activated"
 			@click="prev"
 			v-bind="extraAttributes"
 			:class="{
 				arrow: true,
 				'arrow--left': true,
-				'arrow--disabled': current === 0,
+				'arrow--disabled': current === 0 && !loop,
 			}"
 			:style="[arrowColor && { fill: arrowColor }]"
 			xmlns="http://www.w3.org/2000/svg"
@@ -31,14 +31,16 @@
 			></path>
 		</svg>
 		<svg
-			v-if="navigationArrows"
+			v-if="navigationArrows && activated"
 			@click="next"
 			v-bind="extraAttributes"
 			:class="{
 				arrow: true,
 				'arrow--right': true,
 				'arrow--disabled': keenSlider
-					? current === keenSlider.details().size - 1
+					? keenSlider.track.details &&
+					  current === keenSlider.track.details.slides.length - 1 &&
+					  !loop
 					: false,
 			}"
 			:style="[arrowColor && { fill: arrowColor }]"
@@ -50,7 +52,11 @@
 				d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z"
 			></path>
 		</svg>
-		<div v-if="navigationDots" class="dots" v-bind="extraAttributes">
+		<div
+			v-if="navigationDots && activated"
+			class="dots"
+			v-bind="extraAttributes"
+		>
 			<button
 				v-bind="extraAttributes"
 				v-for="(_, idx) in dotHelper"
@@ -64,18 +70,17 @@
 
 <script lang="ts">
 import Vue from "vue";
-import KeenSliderLib, { TOptions, TEvents } from "keen-slider";
-
-type KeenEvents = Partial<
-	{
-		[key in keyof TEvents]: (instance: KeenSliderLib) => void;
-	}
->;
+import KeenSliderLib, {
+	KeenSliderInstance,
+	KeenSliderOptions,
+	KeenSliderHooks,
+} from "keen-slider";
 
 interface KeenSliderData {
-	keenSlider: KeenSliderLib | null;
+	keenSlider: KeenSliderInstance | null;
 	current: number;
 	interval: number | null;
+	activated: boolean;
 }
 
 export default Vue.extend({
@@ -151,7 +156,6 @@ export default Vue.extend({
 		 * @default 1
 		 */
 		slidesPerView: {
-			default: () => 1,
 			type: Number,
 		},
 		/**
@@ -159,7 +163,6 @@ export default Vue.extend({
 		 * @default 0
 		 */
 		spacing: {
-			default: () => 0,
 			type: Number,
 		},
 		/**
@@ -224,19 +227,23 @@ export default Vue.extend({
 			type: Object,
 			default: () => {},
 		},
+		/**
+		 * @default precision
+		 */
+		renderMode: {
+			type: String,
+			default: "precision",
+		},
 	},
 	data: (): KeenSliderData => ({
 		keenSlider: null,
 		current: 0,
 		interval: null,
+		activated: false,
 	}),
 	mounted() {
-		if (typeof window !== "undefined") {
-			this.$nextTick(() => {
-				this.initialize();
-			});
-		}
 		this.current = this.initial;
+		this.initialize();
 	},
 	beforeDestroy() {
 		if (this.keenSlider) {
@@ -245,22 +252,26 @@ export default Vue.extend({
 		if (this.interval) {
 			clearInterval(this.interval);
 		}
-		this.$emit("destroy");
 	},
 	methods: {
 		initialize() {
 			this.keenSlider = new KeenSliderLib(
 				this.$refs.sliderRef as HTMLElement,
-				this.getCombinedOptions()
+				this.sliderOptions
 			);
+			this.attachEvents();
 			this.initAutoplay();
+			this.activated = true;
 			this.$watch("$props", () => {
 				this.refresh();
+			});
+			this.$nextTick(() => {
+				this.resize();
 			});
 		},
 		refresh() {
 			if (this.keenSlider) {
-				this.keenSlider.refresh(this.getCombinedOptions());
+				this.keenSlider.update(this.sliderOptions);
 				this.initAutoplay();
 			}
 		},
@@ -283,45 +294,31 @@ export default Vue.extend({
 				}, time);
 			}
 		},
-		getCombinedOptions(): TOptions {
-			return {
-				...this.sliderOptions,
-				...this.generateEventHooks(),
-			};
-		},
-		generateEventHooks() {
-			const events: (keyof TEvents)[] = [
-				"afterChange",
-				"beforeChange",
-				"mounted",
+		attachEvents() {
+			const events: KeenSliderHooks[] = [
 				"created",
 				"slideChanged",
-				"dragEnd",
-				"dragStart",
-				"move",
+				"dragStarted",
+				"dragEnded",
+				"destroyed",
+				"updated",
 			];
-			const hookObject: KeenEvents = {};
-			for (const Key of events) {
-				if (Key === "slideChanged") {
-					hookObject[Key] = (...args) => {
-						if (this.keenSlider) {
-							this.current = this.keenSlider.details().relativeSlide;
-						}
-						this.$emit(Key, ...args);
-					};
-				} else {
-					hookObject[Key] = (...args) => {
-						if (Key === "dragStart" && this.interval) {
+			for (const event of events) {
+				if (!this.keenSlider) continue;
+				this.keenSlider.on(
+					event,
+					(keen: KeenSliderInstance, ...args) => {
+						if (event === "dragStarted" && this.interval) {
 							clearInterval(this.interval);
-						}
-						if (Key === "dragEnd") {
+						} else if (event === "dragEnded") {
 							this.initAutoplay();
+						} else if (event == "slideChanged") {
+							this.current = keen.track.details.rel;
 						}
-						this.$emit(Key, ...args);
-					};
-				}
+						this.$emit(event, keen, ...args);
+					}
+				);
 			}
-			return hookObject;
 		},
 		/**
 		 * Safe call to keen-slider moveToSlide() method
@@ -332,7 +329,7 @@ export default Vue.extend({
 		 */
 		moveToSlide(slide: number, duration?: number) {
 			if (this.keenSlider) {
-				this.keenSlider.moveToSlide(slide, duration);
+				this.keenSlider.moveToIdx(slide, true, { duration });
 			}
 		},
 		/**
@@ -349,7 +346,7 @@ export default Vue.extend({
 			duration?: number
 		) {
 			if (this.keenSlider) {
-				this.keenSlider.moveToSlideRelative(slide, nearest, duration);
+				this.keenSlider.moveToIdx(slide, false, { duration });
 			}
 		},
 		/**
@@ -360,6 +357,8 @@ export default Vue.extend({
 		next() {
 			if (this.keenSlider) {
 				this.keenSlider.next();
+				// Reset interval
+				this.initAutoplay();
 			}
 		},
 		/**
@@ -370,6 +369,8 @@ export default Vue.extend({
 		prev() {
 			if (this.keenSlider) {
 				this.keenSlider.prev();
+				// Reset interval
+				this.initAutoplay();
 			}
 		},
 		/**
@@ -379,12 +380,12 @@ export default Vue.extend({
 		 */
 		resize() {
 			if (this.keenSlider) {
-				this.keenSlider.resize();
+				this.keenSlider.update(this.sliderOptions);
 			}
 		},
 	},
 	computed: {
-		sliderOptions(): TOptions {
+		sliderOptions(): KeenSliderOptions | Record<string, unknown> {
 			return {
 				breakpoints: this.breakpoints,
 				controls: this.controls,
@@ -395,15 +396,26 @@ export default Vue.extend({
 				mode: this.mode as "snap" | "free-snap" | "free",
 				duration: this.duration,
 				resetSlide: this.resetSlide,
-				slidesPerView: this.slidesPerView,
-				spacing: this.spacing,
+				...(this.slidesPerView && this.spacing
+					? {
+							slides: {
+								...(this.slidesPerView
+									? { perView: this.slidesPerView }
+									: {}),
+								...(this.spacing
+									? { spacing: this.spacing }
+									: {}),
+							},
+					  }
+					: {}),
 				rubberband: this.rubberband,
 				centered: this.centered,
+				renderMode: this.renderMode,
 			};
 		},
 		dotHelper() {
-			return this.keenSlider
-				? [...Array(this.keenSlider.details().size).keys()]
+			return this.keenSlider && this.keenSlider.track.details
+				? this.keenSlider.track.details.slides.map((v) => v.abs)
 				: [];
 		},
 		extraAttributes() {
@@ -422,9 +434,6 @@ export default Vue.extend({
 	},
 });
 </script>
-<style>
-@import "../../node_modules/keen-slider/keen-slider.min.css";
-</style>
 <style scoped>
 .navigation-wrapper {
 	position: relative;

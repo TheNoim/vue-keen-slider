@@ -2,44 +2,36 @@
 	"name": "vue-keen-slider",
 	"version": "1.4.1",
 	"private": false,
-	"main": "dist/vue-keen-library.ssr.js",
-	"module": "dist/vue-keen-library.esm.js",
-	"unpkg": "dist/vue-keen-library.js",
+	"files": [
+		"dist"
+	],
+	"main": "./dist/vue-keen-slider.umd.js",
+	"module": "./dist/vue-keen-slider.es.js",
+	"exports": {
+		".": {
+			"import": "./dist/vue-keen-slider.es.js",
+			"require": "./dist/vue-keen-slider.umd.js"
+		}
+	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/TheNoim/vue-keen-slider.git"
 	},
 	"scripts": {
-		"serve": "vue-cli-service serve",
-		"build": "rollup -c",
+		"serve": "vite serve",
+		"build": "vite build",
 		"docs": "vue-docgen -c ./docgen.config.js"
 	},
-	"dependencies": {
-		"keen-slider": "^5.2.2"
-	},
 	"devDependencies": {
-		"@rollup/plugin-buble": "^0.21.3",
-		"@rollup/plugin-commonjs": "^15.0.0",
-		"@rollup/plugin-node-resolve": "^9.0.0",
-		"@vue/cli-plugin-babel": "~4.5.2",
-		"@vue/cli-plugin-typescript": "~4.5.2",
-		"@vue/cli-service": "~4.5.2",
-		"core-js": "^3.6.5",
-		"postcss-easy-import": "^3.0.0",
-		"prettier": "^2.0.5",
-		"rollup": "^2.25.0",
-		"rollup-plugin-postcss": "^3.1.5",
-		"rollup-plugin-terser": "^7.0.0",
-		"rollup-plugin-typescript": "^1.0.1",
-		"rollup-plugin-vue": "^5.1.9",
-		"typescript": "~3.9.7",
+		"prettier": "^2.5.1",
+		"typescript": "~4.5.5",
+		"vite": "^2.8.4",
+		"vite-plugin-dts": "^0.9.9",
+		"vite-plugin-vue2": "^1.9.3",
 		"vue": "^2.6.11",
-		"vue-docgen-cli": "^4.30.0",
-		"vue-template-compiler": "^2.6.11"
-	},
-	"prettier": {
-		"tabWidth": 4,
-		"useTabs": true
+		"vue-docgen-cli": "^4.44.15",
+		"vue-template-compiler": "^2.6.14",
+		"keen-slider": "^6.6.3"
 	},
 	"browserslist": [
 		"> 1%",
@@ -47,6 +39,7 @@
 		"not dead"
 	],
 	"peerDependencies": {
-		"vue": "^2.6.11"
+		"vue": "^2.6.14",
+		"keen-slider": "^6.6.3"
 	}
 }

@@ -14,23 +14,23 @@
 			>
 				<keen-slide>
 					<img
-						src="https://img.schuelerkarriere.de/insecure/s:1344::0/aHR0cHM6Ly9jZG4uc2NodWVsZXJrYXJyaWVyZS5kZS9zY2h1ZWxlcmthcnJpZXJlLzE0N2NhMTM1LWQxZTAtNDQ4YS04ZDk3LWZlNWNjYjRiOWI3YSUyNTJGSGVhZGVyX0JXSV9maXJld2FsbC5wbmc="
+						src="https://picsum.photos/1280/266"
 					/>
 				</keen-slide>
 				<keen-slide>
 					<img
-						src="https://img.schuelerkarriere.de/insecure/s:1344::0/aHR0cHM6Ly9jZG4uc2NodWVsZXJrYXJyaWVyZS5kZS9zY2h1ZWxlcmthcnJpZXJlLzcxMTY1Mjg4LTBjMzYtNDY5Zi1hNTBkLTc3MWU1MWZlY2Y2ZCUyNTJGSGVhZGVyX0JXSV9iYXNoLnBuZw=="
+						src="https://picsum.photos/1280/266"
 					/>
 				</keen-slide>
 				<keen-slide>
-					<img
-						src="https://img.schuelerkarriere.de/insecure/s:1344::0/aHR0cHM6Ly9jZG4uc2NodWVsZXJrYXJyaWVyZS5kZS9zY2h1ZWxlcmthcnJpZXJlL2RmM2MyNTI4LTlhMmYtNDU5Yi1hZTEwLTMyOGI5NzQxMDViMCUyNTJGSGVhZGVyX0JXSV9iYWNrdXBzLnBuZw=="
-					/>
+          <img
+              src="https://picsum.photos/1280/266"
+          />
 				</keen-slide>
 				<keen-slide>
-					<img
-						src="https://img.schuelerkarriere.de/insecure/s:1344::0/aHR0cHM6Ly9jZG4uc2NodWVsZXJrYXJyaWVyZS5kZS9zY2h1ZWxlcmthcnJpZXJlLzE0N2NhMTM1LWQxZTAtNDQ4YS04ZDk3LWZlNWNjYjRiOWI3YSUyNTJGSGVhZGVyX0JXSV9maXJld2FsbC5wbmc="
-					/>
+          <img
+              src="https://picsum.photos/1280/266"
+          />
 				</keen-slide>
 			</keen-slider>
 		</test>
